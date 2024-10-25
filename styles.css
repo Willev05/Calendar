@@ -1,0 +1,12 @@
+table, td, tr {
+    border-style: solid;
+    border-collapse: collapse;
+}
+
+#calendar {
+    width: 100%;
+}
+
+#mainTable tr, td {
+    width: 14.28%;
+}
