@@ -3,10 +3,33 @@ table, td, tr {
     border-collapse: collapse;
 }
 
-#calendar {
+html, body {
+    height: 100%;
     width: 100%;
+    overflow: hidden;
+    margin: 0;
 }
 
-#mainTable tr, td {
-    width: 14.28%;
+#calendar {
+    height: 100%;
+    width: 80%;
+    background-color: red;
+    float: left;
+}
+
+#mainTable {
+    width: 100%;
+    height: 85%;
+}
+
+#sidePanel {
+    background-color: blue;
+    float: left;
+    width: 20%;
+    height: 100%;
+}
+
+#pageParent {
+    width: 100%;
+    height: 100%;
 }
