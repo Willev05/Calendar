@@ -1,8 +1,8 @@
-* {
+*, *:before, *:after {
     box-sizing: border-box;
 }
 
-table, td, tr {
+table, td, tr, th {
     border-style: solid;
     border-collapse: collapse;
 }
@@ -17,16 +17,16 @@ html, body {
 #calendar {
     height: 100%;
     width: 80%;
-    background-color: red;
     float: left;
 }
 
 #mainTable {
-    width: 100%;
+    margin:auto;
+    width: 95%;
+    table-layout: fixed
 }
 
 #sidePanel {
-    background-color: blue;
     float: left;
     width: 20%;
     height: 100%;
@@ -35,4 +35,8 @@ html, body {
 #pageParent {
     width: 100%;
     height: 100%;
+}
+
+#calendarControl {
+    overflow: auto;
 }
