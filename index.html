@@ -9,14 +9,29 @@
     <body>
         <div id="pageParent">
             <div id="sidePanel">
-                <h1>Side Panel</h1>
+                <div id="eventShow">
+                    <h2 class="selectedDate center">Date Selected</h2>
+
+                </div>
+
+                <div id="eventCreator">
+                    <h1 class="center">Create an event</h1>
+                    <form id="eventCreatorForm">
+                        <label for="inTime">Start Time:</label>
+                        <input type="time" id="inTime"/>
+
+                        <br/>
+                        <label for="endTime">End Time:</label>
+                        <input type="time" id="endTime"/>
+                    </form>
+                </div>
             </div>
     
             <div id="calendar">
-                <h1>Calendar</h1>
-    
                 <div id="calendarControl">
-                    
+                    <button id="prevMonth">&#60;</button>
+                    <h2 id="monthHeader" class="center">Current Month</h2>
+                    <button id="nextMonth">&#62;</button>
                 </div>
     
                 <table id="mainTable">

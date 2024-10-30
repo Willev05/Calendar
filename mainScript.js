@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function(){
 
 function resizeElements(e){
     resizeCalendarTable();
+    resizeSidePanel();
 }
 
 function resizeCalendarTable(){
@@ -48,7 +49,25 @@ function resizeCalendarTable(){
     //We only want part of it as to not stick to corners of screen
     let calendarWantedSize = calendarRemainingSize * 0.95;
 
-    mainTable.setAttribute("height", calendarWantedSize + "px");
+    //mainTable.setAttribute("height", calendarWantedSize + "px");
+    mainTable.style.height = calendarWantedSize + "px";
+}
+
+function resizeSidePanel(){
+    //Get the two main divs
+    let sidePanel = document.getElementById("sidePanel");
+    let calendar = document.getElementById("calendar");
+    let parent = document.getElementById("pageParent");
+    
+    let sidePanelWidth = parseFloat(getComputedStyle(sidePanel).width);
+    let totalWidth = parseFloat(getComputedStyle(parent).width);
+    
+    console.log(sidePanelWidth, totalWidth);
+
+    let remainingWidth = totalWidth - sidePanelWidth;
+
+    console.log(remainingWidth)
+    calendar.style.width = remainingWidth + "px";
 }
 
 //Gets absolute height by adding margin. Returns a float !! border-box model is already in use !!
