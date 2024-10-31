@@ -22,8 +22,13 @@ document.addEventListener("DOMContentLoaded", function(){
 
         for (let j = 0; j < 7; j++){
             let newCell = document.createElement("td");
+            let cellContainer = document.createElement("div");
             let dateHolder = document.createElement("p");
-            newCell.append(dateHolder);
+            let eventHolder = document.createElement("div");
+            cellContainer.classList.add("cellContainer")
+            newCell.append(cellContainer);
+            cellContainer.append(dateHolder);
+            cellContainer.append(eventHolder);
             dateHolder.classList.add("center");
             newCell.addEventListener("click", cellClicked);
             newRow.appendChild(newCell);
@@ -31,9 +36,6 @@ document.addEventListener("DOMContentLoaded", function(){
 
         mainTable.appendChild(newRow)
     }
-
-    window.addEventListener("resize", resizeElements);
-    resizeElements();
 
     //After all semantics are done!
     //Get the date and write at required places
@@ -51,12 +53,19 @@ document.addEventListener("DOMContentLoaded", function(){
 
     newDate();
     newMonth();
+
+    window.addEventListener("resize", resizeElements);
+    resizeElements();
+    
     //Add function to the month buttons
     let nextMonth = document.getElementById("nextMonth");
     let prevMonth = document.getElementById("prevMonth");
 
     nextMonth.addEventListener("click", changeNextMonth);
     prevMonth.addEventListener("click", changePrevMonth);
+
+    let form = document.getElementById("appointmentCreatorForm");
+    form.addEventListener("submit", appointmentCreate);
 
 });
 
@@ -96,9 +105,12 @@ function newDate(){
 }
 
 function resizeElements(e){
-    resizeCalendarTable();
+    //resetCellSize();
+    let shouldBeTableSize = resizeCalendarTable();
     resizeCalendar();
+    resizeCalendarCells(shouldBeTableSize);
     resizeAppointmentView();
+    writeCalendar();
 }
 
 function resizeCalendarTable(){
@@ -127,6 +139,8 @@ function resizeCalendarTable(){
     let calendarWantedSize = calendarRemainingSize * 0.95;
 
     mainTable.style.height = calendarWantedSize + "px";
+
+    return calendarWantedSize;
 }
 
 function updateMonthDisplay(){
@@ -164,31 +178,51 @@ function resizeCalendar(){
 function resizeAppointmentView(){
     let appointmentForm = document.getElementById("appointmentCreator");
     let appointmentViewer = document.getElementById("appointmentShow");
+    let selectedDate = document.getElementById("selectedDate");
     let parent = document.getElementById("sidePanel");
 
     let appointmentFormHeight = getAbsoluteHeightFromElement(appointmentForm);
+    let selectedDateHeight = getAbsoluteHeightFromElement(selectedDate);
     let totalHeight = getAbsoluteHeightFromElement(parent);
 
-    let remainingHeight = totalHeight - appointmentFormHeight;
+    let remainingHeight = totalHeight - appointmentFormHeight - selectedDateHeight;
 
     appointmentViewer.style.height = remainingHeight + "px";
 }
 
+function resizeCalendarCells(size){
+    let cells = document.querySelectorAll("#mainTable td");
+    let table = document.getElementById("mainTable");
+
+    for (cell of cells){
+        let cellContainer = cell.firstElementChild;
+        cellContainer.style.height = (size - 20) / 6 - 8 + "px";
+    }
+}
 function writeCalendar(){
     let totalDays = daysInMonth(calMonth, calYear);
     let currentDay = 1;
     let dayOfTheWeekToStart = new Date(calYear, calMonth, 1).getDay();
 
     let calendarRows = document.querySelectorAll("#mainTable tr[class=\"calendarRow\"]");
+    let monthlyAppointments = JSON.parse(localStorage.getItem(calMonth.toString() + calYear));
+    monthlyAppointments = monthlyAppointments != null ? monthlyAppointments : {};
 
     let cellsRunThrough = 0;
     for (row of calendarRows){
         let cells = row.children;
         for (cell of cells){
+            cell = cell.firstElementChild;
             let date = cell.firstElementChild;
+            let events = cell.lastElementChild;
+            let dayAppointments = monthlyAppointments["d" + currentDay];
+            dayAppointments = dayAppointments != null ? dayAppointments : []
+
+            events.textContent = "";
             date.textContent = "";
             date.classList.remove("today");
             cell.classList.remove("selected");
+
             cellsRunThrough++;
             if (cellsRunThrough < dayOfTheWeekToStart + 1){
                 continue;
@@ -203,7 +237,31 @@ function writeCalendar(){
                 }
 
                 date.textContent = currentDay.toString();
-                cell.appendChild(date);
+                
+                //Write appointments on the small card
+                //Take how many events are remaining, we need to figure out how many can fit on the screen
+                let amOfEvents = dayAppointments.length;
+                let remainingHeight = parseFloat(getComputedStyle(cell).height) - 50;
+                for (let i = 0; i < dayAppointments.length; i++){
+                    let text = "";
+                    if (remainingHeight - 26 < 26){
+                        text = "+" + amOfEvents + " more";
+                        i = dayAppointments.length;
+                    }
+                    else {
+                        text = dayAppointments[i]["name"];
+                    }
+
+
+                    let newEvent = document.createElement("p");
+                    newEvent.textContent = text;
+                    newEvent.classList.add("calendarEvent");
+                    newEvent.classList.add("center");
+                    events.appendChild(newEvent);
+
+                    remainingHeight -= 26;
+                    amOfEvents--;
+                }
             }
             currentDay++;
         }
@@ -221,6 +279,47 @@ function cellClicked(e){
         year = calYear;
         newDate();
     }
+}
+
+//For storage, it will work like this:
+//Each key for localstorage will be a monthyear combo
+//Value will be a object storing vars with key days as d#
+//Each value will be a list of appointments
+//Each appointment is a object with name, start, end, description
+function appointmentCreate(e){
+    e.preventDefault();
+    let name = document.getElementById("appointmentName").value;
+    let start = document.getElementById("inTime").value;
+    let end = document.getElementById("endTime").value;
+    let description = document.getElementById("description").value;
+
+    let newAppointment = {
+        name:name,
+        start:start,
+        end:end,
+        description:description
+    };
+
+    let monthAppointments = JSON.parse(localStorage.getItem(month.toString() + year));
+
+    if (monthAppointments == null){
+        monthAppointments = {};
+    }
+
+    dayAppointments = monthAppointments["d" + day];
+
+    if (dayAppointments == null){
+        dayAppointments = [];
+        monthAppointments["d" + day] = dayAppointments;
+    }
+
+    dayAppointments.push(newAppointment);
+
+    let monthAppointmentsString = JSON.stringify(monthAppointments);
+
+    localStorage.setItem(month.toString() + year, monthAppointmentsString);
+
+    writeCalendar();
 }
 
 //Helper functions

@@ -9,30 +9,31 @@
     <body>
         <div id="pageParent">
             <div id="sidePanel">
+                <h2 id="selectedDate" class="center">Date Selected</h2>
                 <div id="appointmentShow">
-                    <h2 id="selectedDate" class="center">Date Selected</h2>
+                    
                 </div>
 
                 <div id="appointmentCreator">
                     <h1 class="center">Create an appointment</h1>
                     <form id="appointmentCreatorForm">
-                        <label for="appointmentName">Name of the apppointment:</label>
+                        <label for="appointmentName">Title of the apppointment:</label>
                         <br/>
-                        <input type="text" id="appointmentName"/>
+                        <input type="text" id="appointmentName" required/>
 
                         <br/>
                         <br/>
 
                         <label for="inTime">Start Time:</label>
                         <br/>
-                        <input type="time" id="inTime"/>
+                        <input type="time" id="inTime" required/>
 
                         <br/>
                         <br/>
 
                         <label for="endTime">End Time:</label>
                         <br/>
-                        <input type="time" id="endTime"/>
+                        <input type="time" id="endTime" required/>
 
                         <br/>
                         <br/>
@@ -44,6 +45,7 @@
                         <br/>
 
                         <input type="submit" id="submitBtn" value="Create"/>
+                        <label id="errorDisplay"></label>
                     </form>
                 </div>
             </div>
