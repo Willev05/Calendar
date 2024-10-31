@@ -9,20 +9,41 @@
     <body>
         <div id="pageParent">
             <div id="sidePanel">
-                <div id="eventShow">
-                    <h2 class="selectedDate center">Date Selected</h2>
-
+                <div id="appointmentShow">
+                    <h2 id="selectedDate" class="center">Date Selected</h2>
                 </div>
 
-                <div id="eventCreator">
-                    <h1 class="center">Create an event</h1>
-                    <form id="eventCreatorForm">
+                <div id="appointmentCreator">
+                    <h1 class="center">Create an appointment</h1>
+                    <form id="appointmentCreatorForm">
+                        <label for="appointmentName">Name of the apppointment:</label>
+                        <br/>
+                        <input type="text" id="appointmentName"/>
+
+                        <br/>
+                        <br/>
+
                         <label for="inTime">Start Time:</label>
+                        <br/>
                         <input type="time" id="inTime"/>
 
                         <br/>
+                        <br/>
+
                         <label for="endTime">End Time:</label>
+                        <br/>
                         <input type="time" id="endTime"/>
+
+                        <br/>
+                        <br/>
+
+                        <label for="description">Description of the appointment:</label>
+                        <textarea id="description"></textarea>
+
+                        <br/>
+                        <br/>
+
+                        <input type="submit" id="submitBtn" value="Create"/>
                     </form>
                 </div>
             </div>
@@ -36,7 +57,7 @@
     
                 <table id="mainTable">
                     <tbody>
-                        <tr style="height: 10px;">
+                        <tr id="weekRow">
                             <th>Sunday</th>
                             <th>Monday</th>
                             <th>Tuesday</th>
