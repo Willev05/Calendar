@@ -93,6 +93,10 @@ textarea, input {
     margin: 5px;
 }
 
+#appointmentShow {
+    overflow: auto;
+}
+
 #weekRow {
     height: 10px;
 }

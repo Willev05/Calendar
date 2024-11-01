@@ -26,9 +26,9 @@ document.addEventListener("DOMContentLoaded", function(){
             let dateHolder = document.createElement("p");
             let eventHolder = document.createElement("div");
             cellContainer.classList.add("cellContainer")
-            newCell.append(cellContainer);
-            cellContainer.append(dateHolder);
-            cellContainer.append(eventHolder);
+            newCell.appendChild(cellContainer);
+            cellContainer.appendChild(dateHolder);
+            cellContainer.appendChild(eventHolder);
             dateHolder.classList.add("center");
             newCell.addEventListener("click", cellClicked);
             newRow.appendChild(newCell);
@@ -102,10 +102,10 @@ function newDate(){
     updateDateDisplay();
     updateMonthDisplay();
     writeCalendar();
+    writeAppointments();
 }
 
 function resizeElements(e){
-    //resetCellSize();
     let shouldBeTableSize = resizeCalendarTable();
     resizeCalendar();
     resizeCalendarCells(shouldBeTableSize);
@@ -206,6 +206,7 @@ function writeCalendar(){
 
     let calendarRows = document.querySelectorAll("#mainTable tr[class=\"calendarRow\"]");
     let monthlyAppointments = JSON.parse(localStorage.getItem(calMonth.toString() + calYear));
+
     monthlyAppointments = monthlyAppointments != null ? monthlyAppointments : {};
 
     let cellsRunThrough = 0;
@@ -268,8 +269,47 @@ function writeCalendar(){
     }
 }
 
+//Write the appointments on the left side of the screen
+function writeAppointments(){
+    //Gets the daily appointments from storage
+    let monthlyAppointments = JSON.parse(localStorage.getItem(month.toString() + year));
+    monthlyAppointments = monthlyAppointments != null ? monthlyAppointments : {};
+
+    let dateAppointments = monthlyAppointments["d" + day];
+    dateAppointments = dateAppointments != null ? dateAppointments : [];
+
+    //Wipe currently displaying appointments
+    let appointmentContainer = document.getElementById("appointmentShow");
+    appointmentContainer.textContent = "";
+
+
+    for (appointment of dateAppointments){
+        //All appointment details are part of another general div
+        let newContainer = document.createElement("div");
+        let appointmentTitle = document.createElement("h3");
+        let appointmentTimes = document.createElement("p");
+        let appointmentDesc = document.createElement("p");
+
+        //Only want title and time to be centered
+        appointmentTitle.classList.add("center");
+        appointmentTimes.classList.add("center");
+        
+        //Inputs the stored appointment into the elements
+        appointmentTitle.textContent = appointment.name;
+        appointmentTimes.textContent = appointment.start + " - " + appointment.end;
+        appointmentDesc.textContent = appointment.description;
+
+        //Adds them to new div and then finnaly appends it to the main container
+        newContainer.appendChild(appointmentTitle);
+        newContainer.appendChild(appointmentTimes);
+        newContainer.appendChild(appointmentDesc);
+
+        appointmentContainer.appendChild(newContainer);
+    }
+}
+
 function cellClicked(e){
-    let cell = e.target;
+    let cell = e.currentTarget;
     let dateS = cell.firstElementChild.textContent;
     let date = parseInt(dateS);
 
@@ -320,6 +360,7 @@ function appointmentCreate(e){
     localStorage.setItem(month.toString() + year, monthAppointmentsString);
 
     writeCalendar();
+    writeAppointments();
 }
 
 //Helper functions
