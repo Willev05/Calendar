@@ -359,13 +359,14 @@ function writeAppointments(){
         let appointmentTimes = document.createElement("p");
         let appointmentDesc = document.createElement("p");
 
-        //Only want title and time to be centered
+        //Only want all elements to be centered
         appointmentTitle.classList.add("center");
         appointmentTimes.classList.add("center");
+        appointmentDesc.classList.add("center");
         
         //Inputs the stored appointment into the elements
         appointmentTitle.textContent = appointment.name;
-        appointmentTimes.textContent = appointment.start + " - " + appointment.end;
+        appointmentTimes.textContent = appointment.start;
         appointmentDesc.textContent = appointment.description;
 
         //Adds them to new div and then finnaly appends it to the main container
@@ -403,17 +404,15 @@ function appointmentCreate(e){
     e.preventDefault();
 
     //Get all relevent form info
-    let name = document.getElementById("appointmentName").value;
-    let start = document.getElementById("inTime").value;
-    let end = document.getElementById("endTime").value;
-    let description = document.getElementById("description").value;
+    let name = document.getElementById("appointmentName");
+    let startTime = document.getElementById("startTime");
+    let description = document.getElementById("description");
 
     //Create the base appointment object
     let newAppointment = {
-        name:name,
-        start:start,
-        end:end,
-        description:description
+        name:name.value,
+        start:startTime.value,
+        description:description.value
     };
 
     //Gets the alreadyt saved appointments for current month. If none, makes sure to create empty object as to not access a null object
@@ -435,6 +434,11 @@ function appointmentCreate(e){
     let monthAppointmentsString = JSON.stringify(monthAppointments);
 
     localStorage.setItem(month.toString() + year, monthAppointmentsString);
+
+    //Wipe the inputs
+    name.value = "";
+    startTime.value = "";
+    description.value = "";
 
     //Write the calendar and appointment screen to reflect the changes
     writeCalendar();

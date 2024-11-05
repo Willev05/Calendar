@@ -46,6 +46,10 @@ textarea, input {
     border-color: rgb(153,153,153);
 }
 
+input::placeholder{
+    color: rgb(140, 140, 140);
+}
+
 .calendarRow td {
     vertical-align: top;
 }
